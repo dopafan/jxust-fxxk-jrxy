@@ -166,10 +166,10 @@ def fillForm(session, form, host):
                     formItem['value'] = config['danxuan']['value']
                     fieldItems = formItem['fieldItems']
                     for i in range(0, len(fieldItems))[::-1]:
-                        if fieldItems[i]['content'] != formItem['value']:
+                        if fieldItems[i]['content'] != config['danxuan']['value']:
                             del fieldItems[i]
                 else:
-                    defaultValues = config['danxuanmoren']
+                    defaultValues = config['danxuanmoren']['value']
                     for values in defaultValues:
                         fieldItems = formItem['fieldItems']
                         for i in range(0, len(fieldItems))[::-1]:
