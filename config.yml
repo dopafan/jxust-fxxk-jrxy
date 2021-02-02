@@ -1,21 +1,21 @@
 mode: 0 # 本地模式为1，腾讯云函数为0
 
-baiduocr: #百度云识别验证码（必填）
-    APP_ID : ''
-    API_KEY : ''
-    SECRET_KEY : ''
+baiduocr:
+    APP_ID : '2***3171'
+    API_KEY : '9C***RjdLpDMcfHOGrIhz38K'
+    SECRET_KEY : '	eB***22VUwyTGwZIMpO***5bCe9PdOHW'
 
-users: #用户基本信息（必填）
+users:
   - user:
-      username: "2120171***"  #账号
-      password: "" #密码
-      address:  #两个地址，每次随机一个填写
-      - 'xx省xx市xx区xx'
-      - 'xx省xx市xx区xx'
-      lon: 114.9160872 #经纬度
-      lat: 25.837587
+      username: "2120***259"
+      password: "*********"
+      address:
+      - '江西省赣州市***区***'
+      - '江西省赣州市***区***'
+      lon: 1**.9160*** #经纬度
+      lat: 25.8***587
 
-danxuan:  #单选默认填否，特殊选项在此填写，没有则0
+danxuan:  #单选默认填否，特殊选项在此填写
     title:
     - '今天是否在江西省内？'
     - '0'
@@ -27,10 +27,11 @@ danxuanmoren: #单选默认值
 duoxuan: #多选值
   - '没有以上症状'
   - '厨房'
-sort: 11 #表单总数+1
+sort: 9 #表单总数+1
 
 
 #以下为通知手段，非必须
-mail: "QQ号@qq.com"#QQ邮箱地址，收发一体,没有或不用填0
-mailmima: "q**********ceaej"#授权码
-vxsever: 'SCU1****************************bd0b85f6862b9245a3' #微信通知，没有或不用则填0
+tongzhi: '0'#已提交是否通知 0为不通知，1为通知
+mail: "***15***02@qq.com"#QQ邮箱通知，没有或不用则填0
+mailmima: "qr***jmo***ceaej"#授权码
+vxsever: '0'#'SCU114***Ta769734f6418dad66***cb95***d0b85f6862b9245a3' 微信通知，没有或不用则填0

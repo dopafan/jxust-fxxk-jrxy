@@ -24,7 +24,7 @@ ccc = 1 #判断api是否失效
 def send(x):
     if x == 0:
         if config['mail'] != 0:
-            mailx.send_email(getTimeStr() +abc_1, mail, abc_m)
+            mailx.send_email(abc_1, mail, abc_m)
             if config['vxsever'] != 0:
                 sendMessage()
     elif x == 1:
@@ -45,7 +45,7 @@ def sendchuli(form, tittle, a):
             str1 = ''.join(b)  # 数组转换成字符串
     elif a == 0:
         str1 = str(form)
-    mail.append("{:=^50}".format(tittle))
+    mail.append("{:=^30}".format(tittle))
     mail.append(str1)
 
 # 发送wx通知
@@ -83,7 +83,7 @@ def getCpdailyApis(user):
 def getTimeStr():
     utc_dt = datetime.utcnow().replace(tzinfo=timezone.utc)
     bj_dt = utc_dt.astimezone(timezone(timedelta(hours=8)))
-    return bj_dt.strftime("%Y-%m-%d %H:%M:%S")
+    return bj_dt.strftime("%m-%d %H:%M:%S")
 
 
 # 输出调试信息，并及时刷新缓冲区
@@ -105,7 +105,7 @@ def getSession():
         cookies[name] = value
     session = requests.session()
     session.cookies = requests.utils.cookiejar_from_dict(cookies)
-    sendchuli(session.cookies, 'session.cookies', 0)
+    # sendchuli(session.cookies, 'session.cookies', 0)
     return session, denluss1, denluss2
 
 
@@ -201,9 +201,9 @@ def fillForm(session, form, host):
             # log('答案%d：' % sort + formItem['value'])
             sort += 1
     if sort != config['sort']:
-        return form,'表格数量有变更'
+        return form,'问卷数由'+str(config['sort'])+'变为'+str(sort)+'==='
     else:
-        return form,'无变更'
+        return form,'问卷数为'+str(config['sort'])+'无变更'+'==='
 
 
 # 上传图片到阿里云oss
@@ -290,11 +290,11 @@ def main_handler(event, context):
             abc.append(str_1)
             abc_m.append(str_2)
             if session != None:
-                log('使用本地连接模拟登陆成功。。。')
+                log('使用本地连接模拟登陆成功')
                 params = queryForm(session, apis)
                 if str(params) == 'None':
                     abc_1 = '未发布'
-                    log('获取最新待填写问卷失败，可能是辅导员还没有发布。。。')
+                    log('获取最新待填写问卷失败，可能是辅导员还没有发布')
                     send(0)
                 else:
                     log('最新待填写问卷正在发送至邮箱')
@@ -303,18 +303,16 @@ def main_handler(event, context):
                     msg = submitForm(params['formWid'], user['user']['address'][x], params['collectWid'],
                                      params['schoolTaskWid'], form, session, apis['host'])
                     log('填写地址为：' + user['user']['address'][x] + '\n====填写温度为：' + str(y))
-                    if x == '1':
-                        z = '第一个地址'
-                    else:
-                        z = '第二个地址'
+                    z = user['user']['address'][x]
                     if msg == 'SUCCESS':
-                        abc_1 = bianliang + '自动提交成功！...' + z + '...' + str(y)
+                        abc_1 = '自动提交成功===' + bianliang + z + '===' + str(y)
                         send(0)
                     elif msg == '该收集已填写无需再次填写':
-                        abc_1 = bianliang + '今日已提交！...'+ z + '...' + str(y)
-                        # send(0)
+                        abc_1 = '今日已提交===' + bianliang + z + '===' + str(y)
+                        if config['tongzhi'] != '0':
+                            send(0)
                     else:
-                        abc_1 = bianliang+'自动提交失败。。。' + '错误是' + msg
+                        abc_1 = '自动提交失败===' + '错误是' + msg + bianliang
                         send(0)
     except:
         print(main_handler({}, {}))

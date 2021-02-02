@@ -8,6 +8,7 @@ from email.mime.text import MIMEText
 from email.header import Header
 import json
 import yaml
+from datetime import datetime, timedelta, timezone
 
 def getYmlConfig():
     yaml.warnings({'YAMLLoadWarning': False})
@@ -20,6 +21,11 @@ config = getYmlConfig()
 
 mode = config['mode']
 
+def getTimeStr():
+    utc_dt = datetime.utcnow().replace(tzinfo=timezone.utc)
+    bj_dt = utc_dt.astimezone(timezone(timedelta(hours=8)))
+    return bj_dt.strftime("%m-%d %H:%M:%S")
+
 def send_emailnocheckcode(title, mail, abc):
     b = []
     for i in range(len(mail)):
@@ -27,14 +33,14 @@ def send_emailnocheckcode(title, mail, abc):
         b.append(s + '<br/>')
         str1 = ''.join(b)  # 数组转换成字符串
     str2 = ''.join(abc)  # 数组转换成字符串
-    str1 = "{:=^50}".format('填报日志')+'<br/>'+str2+'<br/>'+str1
+    str1 = "{:=^22}".format('填报日志')+'<br/>'+str2+'<br/>'+str1
     message = MIMEMultipart()   # 邮件主体
     # 邮件加入文本内容
     text = str1
     m_text = MIMEText(text, 'html', 'utf-8')
     message.attach(m_text)
-    message['From'] = Header('今日校园填报机器人')   # 邮件发送者名字
-    message['To'] = Header('Fan')   # 邮件接收者名字
+    message['From'] = Header(getTimeStr())   # 邮件发送者名字
+    message['To'] = Header(config['users'][0]['username'])   # 邮件接收者名字
     message['Subject'] = Header(title)   # 邮件主题
     mail = smtplib.SMTP()
     mail.connect("smtp.qq.com")   # 连接 qq 邮箱
@@ -49,10 +55,10 @@ def send_email(title, mail, abc):
         b.append(s + '<br/>')
         str1 = ''.join(b)  # 数组转换成字符串
     str2 = ''.join(abc)  # 数组转换成字符串
-    str1 = "{:=^50}".format('填报日志')+'<br/>'+str2+'<br/>'+str1
+    str1 = "{:=^22}".format('填报日志')+'<br/>'+str2+'<br/>'+str1
     message = MIMEMultipart()   # 邮件主体
     # 邮件加入文本内容
-    text = str1+'<img src="cid:0">'   # html文本引入id为0的图片
+    text = '<img src="cid:0">'+'<br/>'+str1   # html文本引入id为0的图片
     m_text = MIMEText(text, 'html', 'utf-8')
     message.attach(m_text)
     # 邮件加入图片
@@ -66,8 +72,8 @@ def send_email(title, mail, abc):
     m_img.set_payload(f.read())
     encoders.encode_base64(m_img)
     message.attach(m_img)
-    message['From'] = Header('今日校园填报机器人')   # 邮件发送者名字
-    message['To'] = Header('Fan')   # 邮件接收者名字
+    message['From'] = Header(getTimeStr())   # 邮件发送者名字
+    message['To'] = Header(config['users'][0]['user']['username'])   # 邮件接收者名字
     message['Subject'] = Header(title)   # 邮件主题
     mail = smtplib.SMTP()
     mail.connect("smtp.qq.com")   # 连接 qq 邮箱
